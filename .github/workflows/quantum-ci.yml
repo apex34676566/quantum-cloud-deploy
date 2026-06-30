@@ -1,0 +1,44 @@
+name: Quantum CI/CD
+on:
+  push: { branches: [main] }
+  workflow_dispatch:
+  schedule: [{ cron: '0 */12 * * *' }]
+
+jobs:
+  quantum-sim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - name: Install quantum
+        run: pip install qiskit qiskit-aer pennylane numpy
+      - name: Run quantum notebook
+        run: |
+          python -c "
+import json, sys
+from qiskit import QuantumCircuit
+from qiskit_aer import AerSimulator
+
+# Bell state
+qc = QuantumCircuit(2,2)
+qc.h(0); qc.cx(0,1); qc.measure_all()
+sim = AerSimulator()
+result = sim.run(qc, shots=1024).result()
+counts = result.get_counts()
+print(f'Bell state results: {counts}')
+
+# Grover
+n=2
+qc2 = QuantumCircuit(n,n)
+qc2.h(range(n))
+qc2.cz(0,1)
+qc2.h(range(n)); qc2.measure_all()
+result2 = sim.run(qc2, shots=1024).result()
+print(f'Grover results: {result2.get_counts()}')
+
+with open('results/quantum-output.json', 'w') as f:
+    json.dump({'bell': str(counts), 'grover': str(result2.get_counts())}, f)
+"
+      - uses: actions/upload-artifact@v4
+        with: { name: quantum-results, path: results/ }
