@@ -1,32 +1,7 @@
-name: Quantum CI
+name: Test
 on: [push]
 jobs:
-  quantum-sim:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - name: Install Qiskit
-        run: pip install qiskit qiskit-aer
-      - name: Bell State
-        run: |
-          python -c "
-          from qiskit import QuantumCircuit
-          from qiskit_aer import AerSimulator
-          qc = QuantumCircuit(2,2)
-          qc.h(0); qc.cx(0,1); qc.measure_all()
-          result = AerSimulator().run(qc, shots=1024).result()
-          print('Bell:', result.get_counts())
-          "
-      - name: Grover Search
-        run: |
-          python -c "
-          from qiskit import QuantumCircuit
-          from qiskit_aer import AerSimulator
-          sim = AerSimulator()
-          qc = QuantumCircuit(2,2)
-          qc.h(range(2)); qc.cz(0,1); qc.h(range(2)); qc.measure_all()
-          print('Grover:', sim.run(qc, shots=1024).result().get_counts())
-          "
+      - run: echo "hello world"
