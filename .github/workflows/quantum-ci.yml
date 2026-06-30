@@ -1,9 +1,9 @@
-name: Quantum CI (fixed)
+name: Quantum CI
 on: [push]
 jobs:
   sim:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - run: pip install qiskit qiskit-aer
-      - run: python -c "from qiskit import QuantumCircuit; from qiskit_aer import AerSimulator; qc=QuantumCircuit(2,2); qc.h(0); qc.cx(0,1); qc.measure_all(); print(AerSimulator().run(qc, shots=1024).result().get_counts())"
+    - uses: actions/checkout@v4
+    - run: pip install qiskit qiskit-aer
+    - run: python -c "from qiskit import QuantumCircuit; from qiskit_aer import AerSimulator; qc=QuantumCircuit(2,2); qc.h(0); qc.cx(0,1); qc.measure_all(); print(AerSimulator().run(qc, shots=1024).result().get_counts())"
