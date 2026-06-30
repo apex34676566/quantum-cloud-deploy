@@ -1,8 +1,10 @@
 name: Quantum CI/CD
 on:
-  push: { branches: [main] }
+  push:
+    branches: [main]
   workflow_dispatch:
-  schedule: [{ cron: '0 */12 * * *' }]
+  schedule:
+    - cron: '0 */12 * * *'
 
 jobs:
   quantum-sim:
